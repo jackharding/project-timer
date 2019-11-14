@@ -1,33 +1,88 @@
+body {
+    padding: 25px 0;
+    text-align: center;
+}
+
 .App {
-  text-align: center;
+    max-width: 402px;
+    margin: 0 auto;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
+.instance {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.instance +* {
+	margin-top: 14px;
 }
 
-.App-link {
-  color: #61dafb;
+.instance .instance__time {
+    margin: 0;
+    font-size: 20px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.instance .instance__timer {
+    font-size: 38px;
+}
+
+.instance .instance__ctrl {
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+}
+
+.instance .instance__ctrl svg {
+    width: 28px;
+}
+
+.instances .instances__ctrls {
+    margin-bottom: 25px;
+    text-align: right;
+}
+
+.instances .instances__list {
+	display: flex;
+	flex-direction: column;
+}
+
+.instance:not(.instance--on) form {
+    order: -1;
+}
+
+.instance:not(.instance--on) input {
+    margin: 0 15px 0 0;
+}
+
+.instance:not(.instance--on) .instance__ctrl {
+    margin-left: 15px;
+}
+
+.instance.instance--on {
+	order: -1;
+    flex-direction: column;
+}
+
+.instance.instance--on +* {
+	margin-top: 50px;
+}
+
+.instance.instance--on .instance__time {
+    opacity: .75;
+}
+
+.instance.instance--on .instance__time {
+    margin-bottom: 25px;
+    font-size: 20px;
+}
+
+.instance.instance--on .instance__ctrl {
+    margin-top: 25px;
+}
+
+.instance.instance--on .instance__ctrl svg {
+    width: 46px;
 }
