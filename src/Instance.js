@@ -6,9 +6,16 @@ import Timer from './Timer';
 
 const Instance = ({ title, time, on, sessions, onTitleChange, onStart, onStop }) => {
 
+    const formatTime = input => {
+        return new Date(input * 1000).toISOString().substr(11, 8);
+    }
+
     let [elapsed, setElapsed] = useState(0);
 
     let $input = useRef(null);
+
+    let formattedTime = formatTime(time),
+        formattedElapsed = formatTime(elapsed);
 
     useEffect(() => {
         if($input) {
@@ -39,12 +46,12 @@ const Instance = ({ title, time, on, sessions, onTitleChange, onStart, onStop })
             { on ? (
                 <Timer
                     start={sessions[0].start}
-                    elapsed={elapsed}
+                    elapsed={formattedElapsed}
                     onIncrement={time => setElapsed(time)}
                 />
             ) : null }
 
-            <p className={'instance__time'}>{ time }</p>
+            <p className={'instance__time'}>{ formattedTime }</p>
 
             <form onSubmit={e => {
                 e.preventDefault();

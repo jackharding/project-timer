@@ -19,28 +19,42 @@ const createInstance = () => ({
     }],
 });
 
+const storageKey = 'project-timers';
+
 const firstInstance = createInstance();
+
+let savedInstances = localStorage.getItem('project-timers');
+savedInstances = savedInstances && JSON.parse(savedInstances);
 
 const App = () => {
 
-    let [active, setActive] = useState(firstInstance.id);
+    let [active, setActive] = useState(savedInstances ? null : firstInstance.id);
 
-    let [instances, setInstances] = useState([firstInstance]);
+    let [instances, setInstances] = useState(savedInstances ? savedInstances : [firstInstance]);
+
+    let [updated, setUpdated] = useState(null);
 
     const saveInstances = () => {
         // setActive(null);
         //TODO: Need to trigger updating instances in state from here
-        localStorage.setItem('project-timers', JSON.stringify(instances));
+        localStorage.setItem(storageKey, JSON.stringify(instances));
     }
 
     useEffect(() => {
-        window.addEventListener('beforeunload', saveInstances);
 
-        return () => {
-            saveInstances();
-            window.removeEventListener('beforeunload', saveInstances);
-        }
+        // window.addEventListener('beforeunload', saveInstances);
+
+        // return () => {
+        //     saveInstances();
+        //     window.removeEventListener('beforeunload', saveInstances);
+        // }
     }, []);
+
+    useEffect(() => {
+        if(!updated) return;
+
+        saveInstances();
+    }, [updated]);
 
     // console.log(active, instances)
     const activeInstance = active ? instances.find(({ id }) => id === active) : {};
@@ -67,6 +81,8 @@ const App = () => {
                                 title,
                             }
                         }));
+
+                        setUpdated(new Date());
                     }}
                     onStop={(elapsed) => {
                         setInstances(instances.map(ins => {
@@ -83,6 +99,7 @@ const App = () => {
                         }));
 
                         setActive(null);
+                        setUpdated(new Date());
                     }}
                 />
             ) : null }
