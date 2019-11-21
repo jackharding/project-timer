@@ -87,7 +87,7 @@ const Instance = ({ title, time, on, sessions, onTitleChange, onStart, onStop, o
             </button>
 
             <button
-                onClick={() => onCopy(`${formatTime(time)} on ${title}`)}
+                onClick={() => onCopy(`/time ${formatTime(time)} on ${title}`)}
                 className={'instance__ctrl'}
             >
                 <SVG src={`/icons/svgs/regular/copy.svg`} />
