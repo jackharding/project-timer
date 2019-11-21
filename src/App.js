@@ -54,7 +54,11 @@ const App = () => {
         if(!updated) return;
 
         saveInstances();
-    }, [updated]);
+    }, [updated, instances.length]);
+
+    useEffect(() => {
+        saveInstances();
+    }, [instances.length]);
 
     // console.log(active, instances)
     const activeInstance = active ? instances.find(({ id }) => id === active) : {};
@@ -156,6 +160,14 @@ const App = () => {
                                     }));
 
                                     setActive(instance.id);
+                                }}
+                                onRemove={() => {
+                                    if(window.confirm('Are you sure you want to remove this?')) {
+                                        setInstances(instances.filter(ins => ins.id !== instance.id));
+                                    }
+                                }}
+                                onCopy={async (string) => {
+                                    await navigator.clipboard.writeText(string);
                                 }}
                                 key={`timer-${instance.id}`}
                             />

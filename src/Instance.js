@@ -4,10 +4,12 @@ import { Input } from 'antd';
 
 import Timer from './Timer';
 
-const Instance = ({ title, time, on, sessions, onTitleChange, onStart, onStop }) => {
+const Instance = ({ title, time, on, sessions, onTitleChange, onStart, onStop, onRemove, onCopy }) => {
 
-    const formatTime = input => {
-        return new Date(input * 1000).toISOString().substr(11, 8);
+    const formatTime = (input, includeSeconds = true) => {
+        let cutoff = includeSeconds ? 8 : 5;
+
+        return new Date(input * 1000).toISOString().substr(11, cutoff);
     }
 
     let [elapsed, setElapsed] = useState(0);
@@ -65,7 +67,7 @@ const Instance = ({ title, time, on, sessions, onTitleChange, onStart, onStop })
                     defaultValue={title}
                     ref={$input}
                     style={{
-                        width: '320px',
+                        width: '280px',
                         maxWidth: '100%'
                     }}
                 />
@@ -82,6 +84,20 @@ const Instance = ({ title, time, on, sessions, onTitleChange, onStart, onStop })
                 className={'instance__ctrl'}
             >
                 <SVG src={`/icons/${on ? 'pause' : 'play'}-circle.svg`} />
+            </button>
+
+            <button
+                onClick={() => onCopy(`${formatTime(time)} on ${title}`)}
+                className={'instance__ctrl'}
+            >
+                <SVG src={`/icons/svgs/regular/copy.svg`} />
+            </button>
+
+            <button
+                onClick={onRemove}
+                className={'instance__ctrl'}
+            >
+                <SVG src={`/icons/svgs/regular/times-circle.svg`} />
             </button>
         </div>
     );
