@@ -12,12 +12,14 @@ const Instance = ({ title, time, on, sessions, onTitleChange, onStart, onStop, o
         return new Date(input * 1000).toISOString().substr(11, cutoff);
     }
 
+    console.log('time', time)
+
     let [elapsed, setElapsed] = useState(0);
 
     let $input = useRef(null);
 
-    let formattedTime = formatTime(time),
-        formattedElapsed = formatTime(elapsed);
+    const formattedElapsed = formatTime(elapsed);
+    const formattedTotal = formatTime(elapsed + time);
 
     useEffect(() => {
         if($input) {
@@ -49,22 +51,23 @@ const Instance = ({ title, time, on, sessions, onTitleChange, onStart, onStop, o
                 <Timer
                     start={sessions[0].start}
                     elapsed={formattedElapsed}
+                    total={formattedTotal}
                     onIncrement={time => setElapsed(time)}
                 />
-            ) : null }
-
-            <p className={'instance__time'}>{ formattedTime }</p>
+            ) : (
+                <p className={'instance__time'}>{ formattedTotal }</p>
+            ) }
 
             <form onSubmit={e => {
                 e.preventDefault();
 
-                onTitleChange($input.current.input.value);
                 $input.current.blur();
             }}>
                 <Input
                     size={'large'}
                     placeholder={'What are we tracking?'}
-                    defaultValue={title}
+                    onChange={e => onTitleChange(e.target.value)}
+                    value={title}
                     ref={$input}
                     style={{
                         width: '280px',

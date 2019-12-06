@@ -1,22 +1,27 @@
-import React, { useState, useEffect, forwardRef } from 'react';
+import React, { useEffect } from 'react';
 import { differenceInSeconds } from 'date-fns';
 
-const Timer = ({ start, elapsed, onIncrement }) => {
+const Timer = ({ start, elapsed, total, onIncrement }) => {
     useEffect(() => {
         const timer = setInterval(() => {
             onIncrement(differenceInSeconds(new Date(), start));
         }, 1000);
 
         return () => {
-            console.log('clearing timer')
             clearTimeout(timer);
         }
     }, []);
 
+    // TODO: Check dis
     return(
-        <div className={'instance__timer'}>
-            { elapsed }
-        </div>
+        <>
+            <div className={'instance__timer'}>
+                { elapsed }
+            </div>
+            <p className={'instance__time'}>
+                { total }
+            </p>
+        </>
     );
 }
 

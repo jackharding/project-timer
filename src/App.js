@@ -41,9 +41,9 @@ const App = () => {
     }
 
     useEffect(() => {
-
-        // window.addEventListener('beforeunload', saveInstances);
-
+        window.onbeforeunload = (e) => {
+            return 'You must stop your timer to save progress. Are you sure you want to exit?';
+        }
         // return () => {
         //     saveInstances();
         //     window.removeEventListener('beforeunload', saveInstances);
