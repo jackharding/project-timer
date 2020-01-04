@@ -4,14 +4,15 @@ body {
 }
 
 .App {
-    max-width: 463px;
+    width: 100%;
+    max-width: 493px;
     margin: 0 auto;
 }
 
 .instance {
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
 }
 
@@ -29,10 +30,17 @@ body {
 }
 
 .instance .instance__ctrl {
+    display: flex;
+    align-items: center;
+    width: 22px;
     padding: 0;
     border: 0;
     background: none;
     cursor: pointer;
+}
+
+.instance .instance__ctrl div {
+    display: flex;
 }
 
 .instance .instance__ctrl svg {

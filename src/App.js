@@ -42,6 +42,18 @@ const App = () => {
 
     useEffect(() => {
         window.onbeforeunload = (e) => {
+            // setInstances(instances.map(ins => {
+            //     if(ins.id !== active) return ins;
+
+            //     let sessions = [...ins.sessions];
+            //     sessions[0].end = new Date();
+
+            //     return {
+            //         ...ins,
+            //         time: ins.time + elapsed,
+            //         sessions,
+            //     }
+            // }));
             return 'You must stop your timer to save progress. Are you sure you want to exit?';
         }
         // return () => {
@@ -114,6 +126,7 @@ const App = () => {
                         <Button
                             type={'primary'}
                             icon={'plus'}
+                            aria-label={"Add a new timer"}
                             onClick={() => {
                                 const newInstance = createInstance();
                                 const newInstances = [newInstance, ...instances];

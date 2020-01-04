@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { differenceInSeconds } from 'date-fns';
 
-const Timer = ({ start, elapsed, total, onIncrement }) => {
+const Timer = React.forwardRef(({ start, elapsed, total, onIncrement }, ref) => {
+    
     useEffect(() => {
         const timer = setInterval(() => {
             onIncrement(differenceInSeconds(new Date(), start));
@@ -12,17 +13,19 @@ const Timer = ({ start, elapsed, total, onIncrement }) => {
         }
     }, []);
 
-    // TODO: Check dis
     return(
-        <>
-            <div className={'instance__timer'}>
+        <Fragment>
+            <div 
+                className={'instance__timer'}
+                ref={ref}
+            >
                 { elapsed }
             </div>
             <p className={'instance__time'}>
                 { total }
             </p>
-        </>
+        </Fragment>
     );
-}
+});
 
 export default Timer;

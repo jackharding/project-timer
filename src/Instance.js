@@ -4,15 +4,13 @@ import { Input } from 'antd';
 
 import Timer from './Timer';
 
+const formatTime = (input, includeSeconds = true) => {
+    let cutoff = includeSeconds ? 8 : 5;
+
+    return new Date(input * 1000).toISOString().substr(11, cutoff);
+}
+
 const Instance = ({ title, time, on, sessions, onTitleChange, onStart, onStop, onRemove, onCopy }) => {
-
-    const formatTime = (input, includeSeconds = true) => {
-        let cutoff = includeSeconds ? 8 : 5;
-
-        return new Date(input * 1000).toISOString().substr(11, cutoff);
-    }
-
-    console.log('time', time)
 
     let [elapsed, setElapsed] = useState(0);
 
@@ -66,6 +64,7 @@ const Instance = ({ title, time, on, sessions, onTitleChange, onStart, onStop, o
                 <Input
                     size={'large'}
                     placeholder={'What are we tracking?'}
+                    aria-label={'Enter the name of project to track'}
                     onChange={e => onTitleChange(e.target.value)}
                     value={title}
                     ref={$input}
@@ -85,6 +84,7 @@ const Instance = ({ title, time, on, sessions, onTitleChange, onStart, onStop, o
                     }
                 }}
                 className={'instance__ctrl'}
+                aria-label={`${on ? 'Pause' : 'Resume'} timer`}
             >
                 <SVG src={`/icons/${on ? 'pause' : 'play'}-circle.svg`} />
             </button>
@@ -92,6 +92,7 @@ const Instance = ({ title, time, on, sessions, onTitleChange, onStart, onStop, o
             <button
                 onClick={() => onCopy(`/time ${formatTime(time)} on ${title}`)}
                 className={'instance__ctrl'}
+                aria-label="Copy time string to clipboard"
             >
                 <SVG src={`/icons/svgs/regular/copy.svg`} />
             </button>
@@ -99,6 +100,7 @@ const Instance = ({ title, time, on, sessions, onTitleChange, onStart, onStop, o
             <button
                 onClick={onRemove}
                 className={'instance__ctrl'}
+                aria-label="Remove timer"
             >
                 <SVG src={`/icons/svgs/regular/times-circle.svg`} />
             </button>
