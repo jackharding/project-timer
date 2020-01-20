@@ -23,6 +23,7 @@ const TimeInput = (props) => {
             input={
                 <input
                     className={'instance__time-input'}
+                    aria-label="Edit the time directly"
                     disabled={props.disabled}
                     onBlur={() => {
                         setValue(formatTime(props.value));

@@ -60,6 +60,7 @@ const Instance = ({ instance: { title, id, seconds, sessions }, on, onTitleChang
                 <Input
                     value={title}
                     placeholder={'What are we tracking?'}
+                    aria-label={'Project title'}
                     ref={$input}
                     onChange={(e) => onTitleChange(e.target.value)}
                 />
@@ -74,6 +75,7 @@ const Instance = ({ instance: { title, id, seconds, sessions }, on, onTitleChang
                     }
                 }}
                 className={'instance__ctrl'}
+                aria-label={`${on ? 'Stop' : 'Resume'} timer`}
             >
                 <SVG src={`/icons/${on ? 'pause' : 'play'}-circle.svg`} />
             </button>
@@ -81,6 +83,7 @@ const Instance = ({ instance: { title, id, seconds, sessions }, on, onTitleChang
             <button
                 onClick={onRemove}
                 className={'instance__ctrl'}
+                aria-label="Remove timer"
             >
                 <SVG src={`/icons/svgs/regular/times-circle.svg`} />
             </button>
