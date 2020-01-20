@@ -90,6 +90,7 @@ const App = () => {
                         .map((instance) => (
                             <Instance
                                 instance={instance}
+                                activeTimerId={active}
                                 key={`timer-${instance.id}`}
                                 onTitleChange={title => handleTitleChange(title, instance)}
                                 onTimeChange={seconds => {

@@ -8,7 +8,7 @@ import { formatTime } from '../utils/time';
 import Timer from './Timer';
 import TimeInput from './TimeInput';
 
-const Instance = ({ instance: { title, id, seconds, sessions }, on, onTitleChange, onTimeChange, onStart, onStop, onRemove, onSubmit }) => {
+const Instance = ({ instance: { title, id, seconds, sessions }, on, activeTimerId, onTitleChange, onTimeChange, onStart, onStop, onRemove, onSubmit }) => {
 
     const [elapsed, setElapsed] = useState(0);
 
@@ -74,6 +74,7 @@ const Instance = ({ instance: { title, id, seconds, sessions }, on, onTitleChang
                         onStart();
                     }
                 }}
+                disabled={activeTimerId && activeTimerId !== id}
                 className={'instance__ctrl'}
                 aria-label={`${on ? 'Stop' : 'Resume'} timer`}
             >
