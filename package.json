@@ -5,10 +5,13 @@
   "dependencies": {
     "antd": "^3.20.5",
     "date-fns": "^2.1.0",
+    "node-sass": "^4.13.1",
     "react": "^16.8.6",
+    "react-beforeunload": "^2.1.0",
     "react-compound-timer": "^1.1.1",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1",
+    "react-simple-timefield": "^3.0.0",
     "react-svg": "^10.0.23",
     "uuid": "^3.3.3"
   },

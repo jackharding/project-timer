@@ -1,107 +1,55 @@
-import React, { useEffect, useState, useMemo, useCallback, Fragment } from 'react';
-import { differenceInSeconds } from 'date-fns';
-import SVG from 'react-svg';
-import uuid from 'uuid/v4';
+import React, { useEffect, useState, useRef } from 'react';
 import { Button } from 'antd';
 import 'antd/dist/antd.css';
 
-import './App.css';
+import './scss/index.scss';
 
-import Instance from './Instance';
-import Timer from './Timer';
+import { saveInstances, createInstance, loadInstances } from './utils/instances';
 
-const createInstance = () => ({
-    id: uuid(),
-    title: '',
-    time: 0,
-    sessions: [{
-        start: new Date(),
-    }],
-});
-
-const storageKey = 'project-timers';
-
-const firstInstance = createInstance();
-
-let savedInstances = localStorage.getItem('project-timers');
-savedInstances = savedInstances && JSON.parse(savedInstances);
+import Instance from './components/Instance';
 
 const App = () => {
 
-    let [active, setActive] = useState(savedInstances ? null : firstInstance.id);
+    const [active, setActive] = useState(null);
+    const [instances, setInstances] = useState([]);
 
-    let [instances, setInstances] = useState(savedInstances ? savedInstances : [firstInstance]);
+    const updateInstances = (data) => {
+        setInstances(data);
+        saveInstances(data);
+    }
 
-    let [updated, setUpdated] = useState(null);
+    const handleTitleChange = (title, instance) => {
+        updateInstances(instances.map(ins => {
+            if(instance.id !== ins.id) return ins;
 
-    const saveInstances = () => {
-        // setActive(null);
-        //TODO: Need to trigger updating instances in state from here
-        localStorage.setItem(storageKey, JSON.stringify(instances));
+            return {
+                ...ins,
+                title,
+            }
+        }));
     }
 
     useEffect(() => {
-        window.onbeforeunload = (e) => {
-            // setInstances(instances.map(ins => {
-            //     if(ins.id !== active) return ins;
+        const savedInstances = loadInstances();
+        const firstInstance = createInstance();
 
-            //     let sessions = [...ins.sessions];
-            //     sessions[0].end = new Date();
+        const hasInstances = savedInstances && !!savedInstances.length;
 
-            //     return {
-            //         ...ins,
-            //         time: ins.time + elapsed,
-            //         sessions,
-            //     }
-            // }));
-            return 'You must stop your timer to save progress. Are you sure you want to exit?';
-        }
-        // return () => {
-        //     saveInstances();
-        //     window.removeEventListener('beforeunload', saveInstances);
-        // }
+        setActive(hasInstances ? null : firstInstance.id);
+        setInstances(hasInstances ? savedInstances : [firstInstance]);
     }, []);
 
-    useEffect(() => {
-        if(!updated) return;
-
-        saveInstances();
-    }, [updated, instances.length]);
-
-    useEffect(() => {
-        saveInstances();
-    }, [instances.length]);
-
-    // console.log(active, instances)
     const activeInstance = active ? instances.find(({ id }) => id === active) : {};
 
-    return (
+    return(
         <div className="App">
-            {/*<button className={'add-new'}>*/}
-                {/*<span>Add new instance</span>*/}
-                {/*<SVG src={'/icons/plus-circle.svg'} />*/}
-            {/*</button>*/}
-
             { active ? (
                 <Instance
-                    title={activeInstance.title}
-                    sessions={activeInstance.sessions}
-                    time={activeInstance.time}
+                    instance={activeInstance}
                     on={true}
-                    onTitleChange={title => {
-                        setInstances(instances.map(ins => {
-                            if(active !== ins.id) return ins;
-
-                            return {
-                                ...ins,
-                                title,
-                            }
-                        }));
-
-                        setUpdated(new Date());
-                    }}
-                    onStop={(elapsed) => {
-                        setInstances(instances.map(ins => {
+                    onTitleChange={title => handleTitleChange(title, activeInstance)}
+                    onStop={elapsed => {
+                        updateInstances(instances.map(ins => {
                             if(ins.id !== active) return ins;
 
                             let sessions = [...ins.sessions];
@@ -109,13 +57,12 @@ const App = () => {
 
                             return {
                                 ...ins,
-                                time: ins.time + elapsed,
+                                seconds: ins.seconds + elapsed,
                                 sessions,
                             }
                         }));
 
                         setActive(null);
-                        setUpdated(new Date());
                     }}
                 />
             ) : null }
@@ -126,12 +73,11 @@ const App = () => {
                         <Button
                             type={'primary'}
                             icon={'plus'}
-                            aria-label={"Add a new timer"}
                             onClick={() => {
                                 const newInstance = createInstance();
                                 const newInstances = [newInstance, ...instances];
 
-                                setInstances(newInstances);
+                                updateInstances(newInstances);
                                 setActive(newInstance.id);
                             }}
                         >Add new timer</Button>
@@ -143,22 +89,21 @@ const App = () => {
                         .filter(({ id }) => id !== active)
                         .map((instance) => (
                             <Instance
-                                title={instance.title}
-                                sessions={instance.sessions}
-                                time={instance.time}
-                                on={active === instance.id}
-                                onTitleChange={title => {
-                                    setInstances(instances.map(ins => {
-                                        if(instance.id !== ins.id) return ins;
+                                instance={instance}
+                                key={`timer-${instance.id}`}
+                                onTitleChange={title => handleTitleChange(title, instance)}
+                                onTimeChange={seconds => {
+                                    updateInstances(instances.map(ins => {
+                                        if(ins.id !== instance.id) return ins;
 
                                         return {
                                             ...ins,
-                                            title,
+                                            seconds,
                                         }
                                     }));
                                 }}
                                 onStart={() => {
-                                    setInstances(instances.map(ins => {
+                                    updateInstances(instances.map(ins => {
                                         if(instance.id !== ins.id) return ins;
 
                                         let sessions = [...ins.sessions];
@@ -176,23 +121,13 @@ const App = () => {
                                 }}
                                 onRemove={() => {
                                     if(window.confirm('Are you sure you want to remove this?')) {
-                                        setInstances(instances.filter(ins => ins.id !== instance.id));
+                                        updateInstances(instances.filter(ins => ins.id !== instance.id));
                                     }
                                 }}
-                                onCopy={async (string) => {
-                                    await navigator.clipboard.writeText(string);
-                                }}
-                                key={`timer-${instance.id}`}
                             />
-                        )
-                    ) }
+                        )) }
                 </div>
             </div>
-
-            {/*<Instance*/}
-                {/*title={'Some project'}*/}
-                {/*time={'2:20'}*/}
-            {/*/>*/}
         </div>
     );
 }
