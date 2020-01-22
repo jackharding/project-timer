@@ -16,18 +16,18 @@ const Timer = ({ start, elapsed, total, onIncrement }) => {
 
     return(
         <Fragment>
-            <div 
+            <time
                 className={'instance__timer'}
                 aria-label="Running count of time on this project for the current session"
             >
                 { formatTime(elapsed) }
-            </div>
-            <p 
+            </time>
+            <time
                 className={'instance__time'}
                 aria-label="Total time spent on this project"
             >
                 { total }
-            </p>
+            </time>
         </Fragment>
     );
 }

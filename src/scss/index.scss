@@ -3,13 +3,18 @@ body {
     text-align: center;
 }
 
+* {
+    font-family: 'Montserrat', sans-serif;
+}
+
 button,a {
     transition: .3s;
 }
 
 .App {
-    max-width: 463px;
+    max-width: 493px;
     margin: 0 auto;
+    padding: 0 15px;
 }
 
 .instances {
@@ -62,7 +67,7 @@ button,a {
     }
 
     .instance__time-input {
-        width: 71px;
+        width: 85px;
         padding: 0;
         margin: 0;
         border: 0;
