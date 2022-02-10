@@ -5,7 +5,7 @@
   "dependencies": {
     "antd": "^3.20.5",
     "date-fns": "^2.1.0",
-    "node-sass": "^4.13.1",
+    "node-sass": "^7.0.0",
     "react": "^16.8.6",
     "react-beforeunload": "^2.1.0",
     "react-compound-timer": "^1.1.1",
